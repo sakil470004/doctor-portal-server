@@ -51,7 +51,7 @@ async function run() {
         app.get('/appointments', async (req, res) => {
             const email = req.query.email;
         //    there is a error in this line this line push a error and it set bad date
-            const date = new Date(req.query.date).toLocaleDateString();
+            const date = req.query.date
             // filter by email and date
             const query = { email: email, date: date }
             const cursor = appointmentCollection.find(query);
