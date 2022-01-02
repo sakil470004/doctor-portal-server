@@ -7,7 +7,7 @@ require("dotenv").config();
 const port = process.env.PORT || 5000
 
 // doctors-portal-admin-firebase.json
-// connect firebase with admin sdk
+// connect firebase with admin sdk//the next line come from firebase
 const serviceAccount = require("./doctors-portal-admin-firebase.json");
 
 admin.initializeApp({
@@ -49,22 +49,23 @@ async function run() {
 
         // get cursor data
         app.get('/appointments', async (req, res) => {
-
             const email = req.query.email;
             const date = new Date(req.query.date).toLocaleDateString();
+            // filter by email and date
             const query = { email: email, date: date }
             // console.log(query)
             const cursor = appointmentCollection.find(query);
             const appointments = await cursor.toArray();
             res.json(appointments);
         })
-        // insert a appointment
-        app.post('/appointments', verifyToken,async (req, res) => {
+        // insert a appointment//1st verify the token and then send server req to add the appointment
+        app.post('/appointments', verifyToken, async (req, res) => {
             const appointment = req.body;
             const result = await appointmentCollection.insertOne(appointment);
             // console.log(result);
             res.json(result)
         });
+
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -106,8 +107,8 @@ async function run() {
                     const result = await usersCollection.updateOne(filter, updateDoc);
                     res.json(result);
                 }
-            }else{
-                res.status(403).json({message:'you do not have access to make admin'})
+            } else {
+                res.status(403).json({ message: 'you do not have access to make admin' })
             }
 
         })
