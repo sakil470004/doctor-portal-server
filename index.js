@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000
 
 // doctors-portal-admin-firebase.json
 // connect firebase with admin sdk//the next line come from firebase
-const serviceAccount = require("./doctors-portal-admin-firebase.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -50,17 +50,20 @@ async function run() {
         // get cursor data
         app.get('/appointments', async (req, res) => {
             const email = req.query.email;
+        //    there is a error in this line this line push a error and it set bad date
             const date = new Date(req.query.date).toLocaleDateString();
             // filter by email and date
             const query = { email: email, date: date }
-            // console.log(query)
             const cursor = appointmentCollection.find(query);
             const appointments = await cursor.toArray();
+            console.log(appointments)
+            console.log(date,req.query.date)
             res.json(appointments);
         })
         // insert a appointment//1st verify the token and then send server req to add the appointment
         app.post('/appointments', verifyToken, async (req, res) => {
             const appointment = req.body;
+            // console.log(appointment)
             const result = await appointmentCollection.insertOne(appointment);
             // console.log(result);
             res.json(result)
