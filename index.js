@@ -88,6 +88,7 @@ async function run() {
             // console.log(user,result);
             res.json(result)
         })
+        // it can handle insert and update at the same time
         app.put('/users', async (req, res) => {
             const user = req.body;
             // console.log(user)
