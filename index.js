@@ -48,7 +48,7 @@ async function run() {
         const usersCollection = database.collection('users');
 
         // get cursor data
-        app.get('/appointments', async (req, res) => {
+        app.get('/appointments',  verifyToken,async (req, res) => {
             const email = req.query.email;
         //    there is a error in this line this line push a error and it set bad date
             const date = req.query.date
@@ -61,7 +61,7 @@ async function run() {
             res.json(appointments);
         })
         // insert a appointment//1st verify the token and then send server req to add the appointment
-        app.post('/appointments', verifyToken, async (req, res) => {
+        app.post('/appointments', async (req, res) => {
             const appointment = req.body;
             // console.log(appointment)
             const result = await appointmentCollection.insertOne(appointment);
